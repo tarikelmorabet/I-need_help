@@ -72,33 +72,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- LOGIQUE POUR LA PAGE DE CONNEXION (login.html) ---
-    const loginForm = document.getElementById('login-form');
-    const loginMessage = document.getElementById('login-message');
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const submitButton = loginForm.querySelector('button[type="submit"]');
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const userData = JSON.parse(localStorage.getItem(email));
+    // --- LOGIQUE POUR LA PAGE DE CONNEXION (login.html) ---
+const loginForm = document.getElementById('login-form');
+const loginMessage = document.getElementById('login-message');
+if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const submitButton = loginForm.querySelector('button[type="submit"]');
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const userData = JSON.parse(localStorage.getItem(email));
 
-            submitButton.disabled = true;
-            submitButton.textContent = 'Connexion...';
+        submitButton.disabled = true;
+        submitButton.textContent = 'Connexion...';
 
-            if (userData && userData.password === password) {
-                localStorage.setItem('loggedInUser', email);
-                loginMessage.textContent = "Connexion réussie ! Redirection vers votre tableau de bord...";
-                loginMessage.style.color = "green";
-                // Pour l'instant, on redirige vers l'accueil car dashboard.html n'existe pas encore
-                setTimeout(() => { window.location.href = 'index.html'; }, 2000); 
-            } else {
-                loginMessage.textContent = "Email ou mot de passe incorrect.";
-                loginMessage.style.color = "red";
-                submitButton.disabled = false;
-                submitButton.textContent = "Se connecter";
-            }
-        });
-    }
+        if (userData && userData.password === password) {
+            localStorage.setItem('loggedInUser', email);
+            loginMessage.textContent = "Connexion réussie ! Redirection vers votre tableau de bord...";
+            loginMessage.style.color = "green";
+            // C'EST CETTE LIGNE QUI EST CRUCIALE :
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+        } else {
+            loginMessage.textContent = "Email ou mot de passe incorrect.";
+            loginMessage.style.color = "red";
+            submitButton.disabled = false;
+            submitButton.textContent = "Se connecter";
+        }
+    });
+}
     
     // --- LOGIQUE POUR LA PAGE "I need help" (need_help.html) ---
     const functionSelect = document.getElementById('function-select');
