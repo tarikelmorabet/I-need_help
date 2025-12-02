@@ -13,9 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCanHelp = document.getElementById('btn-can-help');
     if (btnHelpNeeded && btnCanHelp) {
         btnHelpNeeded.addEventListener('click', (e) => {
-            e.preventDefault(); // Empêche le saut instantané
+            e.preventDefault();
             addClickEffect(btnHelpNeeded);
-            setTimeout(() => { window.location.href = 'need_help.html'; }, 150); // Laisse le temps à l'animation
+            setTimeout(() => { window.location.href = 'need_help.html'; }, 150);
         });
 
         btnCanHelp.addEventListener('click', (e) => {
@@ -72,34 +72,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- LOGIQUE POUR LA PAGE DE CONNEXION (login.html) ---
-    // --- LOGIQUE POUR LA PAGE DE CONNEXION (login.html) ---
-const loginForm = document.getElementById('login-form');
-const loginMessage = document.getElementById('login-message');
-if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const submitButton = loginForm.querySelector('button[type="submit"]');
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        const userData = JSON.parse(localStorage.getItem(email));
+    const loginForm = document.getElementById('login-form');
+    const loginMessage = document.getElementById('login-message');
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const submitButton = loginForm.querySelector('button[type="submit"]');
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const userData = JSON.parse(localStorage.getItem(email));
 
-        submitButton.disabled = true;
-        submitButton.textContent = 'Connexion...';
+            submitButton.disabled = true;
+            submitButton.textContent = 'Connexion...';
 
-        if (userData && userData.password === password) {
-            localStorage.setItem('loggedInUser', email);
-            loginMessage.textContent = "Connexion réussie ! Redirection vers votre tableau de bord...";
-            loginMessage.style.color = "green";
-            // C'EST CETTE LIGNE QUI EST CRUCIALE :
-            setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
-        } else {
-            loginMessage.textContent = "Email ou mot de passe incorrect.";
-            loginMessage.style.color = "red";
-            submitButton.disabled = false;
-            submitButton.textContent = "Se connecter";
-        }
-    });
-}
+            if (userData && userData.password === password) {
+                localStorage.setItem('loggedInUser', email);
+                loginMessage.textContent = "Connexion réussie ! Redirection vers votre tableau de bord...";
+                loginMessage.style.color = "green";
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+            } else {
+                loginMessage.textContent = "Email ou mot de passe incorrect.";
+                loginMessage.style.color = "red";
+                submitButton.disabled = false;
+                submitButton.textContent = "Se connecter";
+            }
+        });
+    }
     
     // --- LOGIQUE POUR LA PAGE "I need help" (need_help.html) ---
     const functionSelect = document.getElementById('function-select');
@@ -158,153 +156,153 @@ if (loginForm) {
                 functionSelect.innerHTML = '<option value="">Erreur de chargement des options</option>';
             });
     }
-});
-// --- LOGIQUE POUR LA PAGE TABLEAU DE BORD (dashboard.html) ---
-const welcomeMessage = document.getElementById('welcome-message');
-const logoutButton = document.getElementById('logout-button');
-const offerForm = document.getElementById('offer-form');
-const offerMessage = document.getElementById('offer-message');
 
-// On vérifie si les éléments de base existent. Si non, on n'exécute pas le code.
-if (!welcomeMessage || !logoutButton || !offerForm) {
-    console.error("Erreur : Les éléments essentiels du tableau de bord sont manquants dans le HTML.");
-} else {
+    // --- DÉBUT DE LA LOGIQUE POUR LA PAGE TABLEAU DE BORD (dashboard.html) ---
+    const welcomeMessage = document.getElementById('welcome-message');
+    const logoutButton = document.getElementById('logout-button');
+    const offerForm = document.getElementById('offer-form');
+    const offerMessage = document.getElementById('offer-message');
 
-    const loggedInUserEmail = localStorage.getItem('loggedInUser');
-    
-    if (loggedInUserEmail) {
-        const userData = JSON.parse(localStorage.getItem(loggedInUserEmail));
-        welcomeMessage.textContent = `Bonjour, ${userData.username} !`;
+    // On vérifie si les éléments de base existent. Si non, on n'exécute pas le code.
+    if (welcomeMessage && logoutButton && offerForm) {
+        
+        const loggedInUserEmail = localStorage.getItem('loggedInUser');
+        
+        if (loggedInUserEmail) {
+            const userData = JSON.parse(localStorage.getItem(loggedInUserEmail));
+            welcomeMessage.textContent = `Bonjour, ${userData.username} !`;
 
-        // --- RÉFÉRENCES AUX ÉLÉMENTS DU FORMULAIRE ---
-        const functionSelect = document.getElementById('offer-function');
-        const optionSelect = document.getElementById('offer-option');
-        const descriptionInput = document.getElementById('offer-description');
-        const scheduleSelect = document.getElementById('offer-schedule');
-        const priceInput = document.getElementById('offer-price');
-        const citySelect = document.getElementById('offer-city');
-        const districtSelect = document.getElementById('offer-district');
+            // --- RÉFÉRENCES AUX ÉLÉMENTS DU FORMULAIRE ---
+            const functionSelect = document.getElementById('offer-function');
+            const optionSelect = document.getElementById('offer-option');
+            const descriptionInput = document.getElementById('offer-description');
+            const scheduleSelect = document.getElementById('offer-schedule');
+            const priceInput = document.getElementById('offer-price');
+            const citySelect = document.getElementById('offer-city');
+            const districtSelect = document.getElementById('offer-district');
 
-        // --- FONCTION POUR CHARGER LES DONNÉES ET PEUPLER LES MENUS ---
-        const populateForm = async () => {
-            try {
-                console.log("Chargement de data.json...");
-                const functionsResponse = await fetch('data.json');
-                if (!functionsResponse.ok) throw new Error(`Erreur HTTP! statut: ${functionsResponse.status}`);
-                const functionsData = await functionsResponse.json();
-                console.log("data.json chargé avec succès.", functionsData);
+            // --- FONCTION POUR CHARGER LES DONNÉES ET PEUPLER LES MENUS ---
+            const populateForm = async () => {
+                try {
+                    console.log("Chargement de data.json...");
+                    const functionsResponse = await fetch('data.json');
+                    if (!functionsResponse.ok) throw new Error(`Erreur HTTP! statut: ${functionsResponse.status}`);
+                    const functionsData = await functionsResponse.json();
+                    console.log("data.json chargé avec succès.", functionsData);
 
-                console.log("Chargement de cities.json...");
-                const citiesResponse = await fetch('cities.json');
-                if (!citiesResponse.ok) throw new Error(`Erreur HTTP! statut: ${citiesResponse.status}`);
-                const citiesData = await citiesResponse.json();
-                console.log("cities.json chargé avec succès.", citiesData);
+                    console.log("Chargement de cities.json...");
+                    const citiesResponse = await fetch('cities.json');
+                    if (!citiesResponse.ok) throw new Error(`Erreur HTTP! statut: ${citiesResponse.status}`);
+                    const citiesData = await citiesResponse.json();
+                    console.log("cities.json chargé avec succès.", citiesData);
 
-                const allOptions = functionsData.options;
-                const allCities = citiesData.cities;
+                    const allOptions = functionsData.options;
+                    const allCities = citiesData.cities;
 
-                // Peupler le menu des fonctions
-                Object.keys(allOptions).forEach(func => {
-                    const option = document.createElement('option');
-                    option.value = func;
-                    option.textContent = func.charAt(0).toUpperCase() + func.slice(1);
-                    functionSelect.appendChild(option);
-                });
+                    // Peupler le menu des fonctions
+                    Object.keys(allOptions).forEach(func => {
+                        const option = document.createElement('option');
+                        option.value = func;
+                        option.textContent = func.charAt(0).toUpperCase() + func.slice(1);
+                        functionSelect.appendChild(option);
+                    });
 
-                // Peupler le menu des villes
-                Object.keys(allCities).forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.textContent = city;
-                    citySelect.appendChild(option);
-                });
-                
-                // --- LOGIQUE DES MENUS LIÉS ---
-                functionSelect.addEventListener('change', () => {
-                    const selectedFunction = functionSelect.value;
-                    optionSelect.innerHTML = '<option value="">--Choisir une option--</option>';
-                    if (selectedFunction && allOptions[selectedFunction]) {
-                        optionSelect.disabled = false;
-                        allOptions[selectedFunction].forEach(optText => {
-                            const option = document.createElement('option');
-                            option.value = optText;
-                            option.textContent = optText;
-                            optionSelect.appendChild(option);
-                        });
-                    } else {
-                        optionSelect.disabled = true;
+                    // Peupler le menu des villes
+                    Object.keys(allCities).forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city;
+                        option.textContent = city;
+                        citySelect.appendChild(option);
+                    });
+                    
+                    // --- LOGIQUE DES MENUS LIÉS ---
+                    functionSelect.addEventListener('change', () => {
+                        const selectedFunction = functionSelect.value;
+                        optionSelect.innerHTML = '<option value="">--Choisir une option--</option>';
+                        if (selectedFunction && allOptions[selectedFunction]) {
+                            optionSelect.disabled = false;
+                            allOptions[selectedFunction].forEach(optText => {
+                                const option = document.createElement('option');
+                                option.value = optText;
+                                option.textContent = optText;
+                                optionSelect.appendChild(option);
+                            });
+                        } else {
+                            optionSelect.disabled = true;
+                        }
+                    });
+
+                    citySelect.addEventListener('change', () => {
+                        const selectedCity = citySelect.value;
+                        districtSelect.innerHTML = '<option value="">--Choisir un quartier--</option>';
+                        if (selectedCity && allCities[selectedCity]) {
+                            districtSelect.disabled = false;
+                            allCities[selectedCity].forEach(districtText => {
+                                const option = document.createElement('option');
+                                option.value = districtText;
+                                option.textContent = districtText;
+                                districtSelect.appendChild(option);
+                            });
+                        } else {
+                            districtSelect.disabled = true;
+                        }
+                    });
+
+                    // --- CHARGER LES DONNÉES SAUVEGARDÉES ---
+                    const offerData = JSON.parse(localStorage.getItem(`offer_${loggedInUserEmail}`));
+                    if (offerData) {
+                        functionSelect.value = offerData.function || '';
+                        functionSelect.dispatchEvent(new Event('change'));
+                        optionSelect.value = offerData.option || '';
+                        descriptionInput.value = offerData.description || '';
+                        scheduleSelect.value = offerData.schedule || '';
+                        priceInput.value = offerData.price || '';
+                        citySelect.value = offerData.city || '';
+                        citySelect.dispatchEvent(new Event('change'));
+                        districtSelect.value = offerData.district || '';
                     }
-                });
 
-                citySelect.addEventListener('change', () => {
-                    const selectedCity = citySelect.value;
-                    districtSelect.innerHTML = '<option value="">--Choisir un quartier--</option>';
-                    if (selectedCity && allCities[selectedCity]) {
-                        districtSelect.disabled = false;
-                        allCities[selectedCity].forEach(districtText => {
-                            const option = document.createElement('option');
-                            option.value = districtText;
-                            option.textContent = districtText;
-                            districtSelect.appendChild(option);
-                        });
-                    } else {
-                        districtSelect.disabled = true;
-                    }
-                });
-
-                // --- CHARGER LES DONNÉES SAUVEGARDÉES ---
-                const offerData = JSON.parse(localStorage.getItem(`offer_${loggedInUserEmail}`));
-                if (offerData) {
-                    functionSelect.value = offerData.function || '';
-                    functionSelect.dispatchEvent(new Event('change'));
-                    optionSelect.value = offerData.option || '';
-                    descriptionInput.value = offerData.description || '';
-                    scheduleSelect.value = offerData.schedule || '';
-                    priceInput.value = offerData.price || '';
-                    citySelect.value = offerData.city || '';
-                    citySelect.dispatchEvent(new Event('change'));
-                    districtSelect.value = offerData.district || '';
+                } catch (error) {
+                    console.error("Une erreur est survenue lors du chargement des données du formulaire:", error);
+                    offerMessage.textContent = "Erreur de chargement des données. Veuillez réessayer plus tard.";
+                    offerMessage.style.color = "red";
                 }
-
-            } catch (error) {
-                console.error("Une erreur est survenue lors du chargement des données du formulaire:", error);
-                offerMessage.textContent = "Erreur de chargement des données. Veuillez réessayer plus tard.";
-                offerMessage.style.color = "red";
-            }
-        };
-
-        // Lancer la fonction
-        populateForm();
-
-        // --- SOUMISSION DU FORMULAIRE ---
-        offerForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const newOfferData = {
-                function: functionSelect.value,
-                option: optionSelect.value,
-                description: descriptionInput.value,
-                schedule: scheduleSelect.value,
-                price: priceInput.value,
-                city: citySelect.value,
-                district: districtSelect.value,
-                userEmail: loggedInUserEmail
             };
 
-            localStorage.setItem(`offer_${loggedInUserEmail}`, JSON.stringify(newOfferData));
-            
-            offerMessage.textContent = "Votre offre a été sauvegardée avec succès !";
-            offerMessage.style.color = "green";
-            setTimeout(() => { offerMessage.textContent = ''; }, 3000);
-        });
+            // Lancer la fonction
+            populateForm();
 
-    } else {
-        window.location.href = 'login.html';
+            // --- SOUMISSION DU FORMULAIRE ---
+            offerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const newOfferData = {
+                    function: functionSelect.value,
+                    option: optionSelect.value,
+                    description: descriptionInput.value,
+                    schedule: scheduleSelect.value,
+                    price: priceInput.value,
+                    city: citySelect.value,
+                    district: districtSelect.value,
+                    userEmail: loggedInUserEmail
+                };
+
+                localStorage.setItem(`offer_${loggedInUserEmail}`, JSON.stringify(newOfferData));
+                
+                offerMessage.textContent = "Votre offre a été sauvegardée avec succès !";
+                offerMessage.style.color = "green";
+                setTimeout(() => { offerMessage.textContent = ''; }, 3000);
+            });
+
+        } else {
+            window.location.href = 'login.html';
+        }
+
+        // --- GESTION DE LA DÉCONNEXION ---
+        logoutButton.addEventListener('click', () => {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'index.html';
+        });
     }
 
-    // --- GESTION DE LA DÉCONNEXION ---
-    logoutButton.addEventListener('click', () => {
-        localStorage.removeItem('loggedInUser');
-        window.location.href = 'index.html';
-    });
-}
+});
