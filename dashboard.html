@@ -32,8 +32,6 @@
             <label for="offer-description">Description de mes services :</label>
             <textarea id="offer-description" rows="5" placeholder="Décrivez ce que vous pouvez faire, vos compétences, etc."></textarea>
 
-                
-
             <!-- CHAMP POUR LES HORAIRES -->
             <label for="offer-schedule">Mes horaires de disponibilité :</label>
             <select id="offer-schedule">
@@ -44,7 +42,7 @@
                 <option value="Sur rendez-vous">Sur rendez-vous</option>
             </select>
 
-            <!-- NOUVEAU CHAMP POUR LE PRIX -->
+            <!-- CHAMP POUR LE PRIX -->
             <label for="offer-price">Prix moyen par intervention standard (en Dh) :</label>
             <input type="number" id="offer-price" placeholder="Ex: 250" min="0" step="10">
 
@@ -54,4 +52,19 @@
                 <option value="">--Choisir une ville--</option>
             </select>
 
-<!-- ... (le code après reste inchangé) ... -->
+            <!-- MENU DÉROULANT POUR LE QUARTIER -->
+            <label for="offer-district">Mon quartier :</label>
+            <select id="offer-district" disabled>
+                <option value="">--D'abord, choisissez une ville--</option>
+            </select>
+
+            <button type="submit">Sauvegarder mon offre</button>
+        </form>
+        <p id="offer-message"></p>
+
+        <button id="logout-button">Se déconnecter</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
